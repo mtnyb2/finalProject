@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="he">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customers</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-4 offset-md-4">
+                <h2 dir=rtl>פתיחת פנייה ללקוח</h2>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-8 offset-md-2">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <button class="btn btn-outline-secondary" type="button" id='search-button'>חיפוש</button>
+                    </div>
+                    <input type="text" class="form-control" placeholder="פרטי לקוח" aria-label="" id="search-bar"
+                        aria-describedby="basic-addon1" dir="rtl">
+                </div>
+            </div>
+        </div>
+
+        <div id="wrapper">
+            <table class="table" dir="rtl">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">שם לקוח</th>
+                        <th scope="col"> כתובת </th>
+                        <th scope="col"> מספר טלפון</th>
+                    </tr>
+                </thead>
+                <tbody id="customer-list">
+                </tbody>
+            </table>
+        </div>
+
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="myModalLabel"></h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+
+                    </div>
+                    <div class="modal-body">
+                        <ul class="list-group" id="order-list">
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="modal fade" id="complaintModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="myModalLabel" dir="rtl" style="float: right;">פתח פנייה חדשה</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+
+
+                    </div>
+                    <div class="modal-body">
+                        <form id="complaintForm">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="customer_name">שם לקוח</label>
+                                        <input type="string" class="form-control" id="customer-name" disabled>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="customer_address">כתובת</label>
+                                    <input type="string" class="form-control" id="customer-address" disabled>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="sale_id">מספר הזמנה</label>
+                                    <input type="string" class="form-control" id="customer-order-number" name="sale_id"
+                                        readonly="readonly">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-4 offset-4">
+
+                                    <select class="form-select form-control-lg" aria-label="Default select example"
+                                        name="complaint_type">
+                                        <option value="not_arrived">לא הגיע</option>
+                                        <option value="faulty">תקול</option>
+                                        <option value="other">אחר</option>
+                                    </select>
+                                    <label for="complaint_type">סיבת פנייה</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-12 ">
+                                    <label for="customer_text" class="col-form-label"> תוכן פנייה:</label>
+                                    <textarea dir="rtl" class="form-control" id="exampleFormControlTextarea1"
+                                        name="customer_text" rows="10"></textarea>
+                                </div>
+                            </div>
+                            <div class="row" dir="rtl">
+                                <div class="col-md-4 md-offset-4">
+                                    <button type="submit" id="submit-complaint" class="btn btn-primary float-right">שלח
+                                        פנייה</button>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    </div>
+    <style>
+        td {
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        th {
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        label {
+            text-align: right;
+            vertical-align: middle;
+        }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/css/bootstrap.min.css"
+        integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script>
+        var customers_data;
+        $(document).ready(function () {
+            $("#search-button").click(function () {
+                // Define the parameters
+                var params = {
+                    search: $("#search-bar").val(),
+                };
+
+                // Send the GET request
+                $.get("/customers", params, function (data, status) {
+                    // Handle the response here
+                    if (status === 'success') {
+                        $('#customer-list').children().remove(); // removing old customers
+                        customers_data = data;
+                        let customer_list_items = [];
+                        for (i = 0; i < customers_data.length; i++) {
+                            let customer = customers_data[i];
+                            let customer_list_item = $(`<tr customer_id=${customer.id} class="ticket">
+                                                    <td > ${customer.name}</th>
+                                                    <td > ${customer.address} </td>
+                                                    <td> ${customer.phone_number} </td>
+                                                    
+                                                </tr`);
+                            customer_list_item.click(function (event) {
+                                $('#order-list').empty();
+                                var chosen_customer_id;
+                                for (i = 0; i < customers_data.length; i++) {
+                                    if (customers_data[i].id === chosen_customer_id) {
+                                        let customer = customers_data[i]
+                                    }
+                                }
+                                $('#myModal').modal('toggle');
+                                $('#myModalLabel').text(customer.name);
+
+                                let sales = customer.sales;
+                                for (i = 0; i < sales.length; i++) {
+                                    let sale = sales[i];
+                                    let sale_description = ` `
+                                    let sale_list_item = $(`<li class="list-group-item list-group-item-action flex-column align-items-start" sale_id=${sale.id} customer_id=${customer.id}>
+                                                                <div class="container">
+                                                                    <div class="row">
+                                                                        <div class="col-md-4">
+                                                                            <p style="float: right; align: right">תאריך הזמנה: ${new Date(sale.timestamp).toLocaleDateString('en-UK')}
+                                                                                
+                                                                        </div>
+                                                                        <div class="col-md-4">
+                                                                            <p style="float: right; align: right">
+                                                                                מספר פריטים בהזמנה: ${sale.items_sold.length}
+                                                                                </p>
+                                                                        </div>
+                                                                        <div class="col-md-4">
+                                                                            <div class="row"> 
+                                                                                <div class="col-md-2 offset-md-4">
+                                                                                    <span class="badge ${sale.status == 'sent' ? 'badge-success' : 'badge-warning'}">${sale.status == 'sent' ? 'נשלח' : 'בדרך'}</span>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </li>`);
+                                    sale_list_item.click(function (event) {
+                                        $('#myModal').modal('hide');
+                                        $('#complaintModal').modal('show');
+                                        let customer_id = this.attributes.customer_id.value;
+                                        let sale_id = this.attributes.sale_id.value;
+
+                                        for (i = 0; i < customers_data.length; i++) {
+                                            if (customers_data[i].id === chosen_customer_id) {
+                                                let customer = customers_data[i]
+                                            }
+                                        }
+
+                                        let customer_name = customer.name;
+                                        let customer_address = customer.address;
+
+                                        $('#customer-name').val(customer_name);
+                                        $('#customer-address').val(customer_address);
+                                        $('#customer-order-number').val(sale_id);
+
+                                        $('#complaintForm').submit(function (event) {
+                                            let customer_id_input = $("<input>")
+                                                .attr("type", "hidden")
+                                                .attr("name", "customer_id").val(customer_id);
+                                            $(this).append(customer_id_input);
+                                            $.ajax({
+                                                url: "/customerService",
+                                                method: "POST",
+                                                data: $('form#complaintForm').serialize(),
+                                                success: function (data) {
+                                                    $('#myModal').modal('hide');
+                                                }
+                                            });
+                                            event.stopPropagation();
+                                        })
+                                    })
+                                    $('#order-list').append(sale_list_item);
+
+                                }
+                            })
+                            customer_list_items.push(customer_list_item);
+                        }
+                        for (i = 0; i < customer_list_items.length; i++) {
+                            $('#customer-list').append(customer_list_items[i]);
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>

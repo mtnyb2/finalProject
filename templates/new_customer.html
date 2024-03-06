@@ -1,0 +1,34 @@
+<script>
+    document.getElementById('newCustomerForm').addEventListener('submit', function (e) {
+        e.preventDefault(); // Prevent the default form submission
+
+        // Collecting form data
+        const formData = {
+            id: document.getElementById('customerId').value,
+            name: document.getElementById('customerName').value,
+            phone_number: document.getElementById('customerPhoneNumber').value,
+            email: document.getElementById('customerEmail').value,
+            address: document.getElementById('customerAddress').value,
+            age: document.getElementById('customerAge').value,
+        };
+
+        // Sending the form data to the Flask backend
+        fetch('/customers', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData),
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+                alert('Customer added successfully');
+                // Optionally reset the form or redirect the user
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                alert('Error adding customer');
+            });
+    });
+</script>

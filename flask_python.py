@@ -1,11 +1,10 @@
 import contextlib
 import datetime
-from flask import Flask, redirect, url_for, render_template, request, jsonify
+from flask import Flask, redirect, url_for, render_template, request, jsonify, send_file, send_from_directory
 import sqlite3
 
 
-app = Flask(__name__) 
-
+app = Flask(__name__)
 
 @contextlib.contextmanager
 def _get_cursor():
@@ -70,16 +69,6 @@ def get_worker_details(id: str):
                 print(f"Failed to update worker {name} {fname} with id = {id}")
                 return "Failed to insert", 400
 
-
-
-app = Flask(__name__)
-
-@contextlib.contextmanager
-def _get_cursor():
-    conn = sqlite3.connect('Manual Database.db')
-    yield conn.cursor()
-    conn.commit()
-    conn.close()
 
 
 def _get_all_sales_for_customer(curosr, customer_id: int):
@@ -263,6 +252,22 @@ def customer_service():
     return render_template('customer_service.html')
 
 
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+@app.route('/login.html')
+def login_page():
+    return render_template('login.html')
+
+@app.route('/splash.jpg')
+def backgroung_image():
+    return send_file("templates/64994452421978.jpg")
+
+@app.route('/static/<item>')
+def static_serve(item):
+    return send_from_directory('static', item)
+
 @app.route('/api/items')
 def get_items():
     # Example: Fetching items from a database
@@ -285,37 +290,4 @@ if __name__ == '__main__':
     # make endpoit with POST method to register a new worker, use the SQLite3 cursor to put the row in the DB.
     app.run(debug=True, port=5002)
 
-#http://127.0.0.1:5000/
-#http://127.0.0.1:5002/
-    #http://127.0.0.1:5002/Login
-#http://127.0.0.1:5002/home
-#http://127.0.0.1:5002/sign-in
-#http://127.0.0.1:5002/manager-view
-#http://127.0.0.1:5002/customer-service-view
-#http://127.0.0.1:5002/worker_ticket
-#http://127.0.0.1:5002/new-ticket
-#http://127.0.0.1:5002/customers
 
-
-app = Flask(__name__)
-
-# Example data - replace with actual database queries
-users = {"123": {"first_name": "John", "last_name": "Doe", "address": "123 Elm Street"}}
-orders = {"456": {"order_number": "456", "items": ["Item A", "Item B"]}}
-problem_types = ["Delivery Issue", "Product Issue", "Payment Issue"]
-
-@app.route('/api/users/<user_id>')
-def get_user(user_id):
-    # Replace with actual data retrieval logic
-    user = users.get(user_id, {})
-    return jsonify(user)
-
-@app.route('/api/orders/<order_id>')
-def get_order(order_id):
-    # Replace with actual data retrieval logic
-    order = orders.get(order_id, {})
-    return jsonify(order)
-
-@app.route('/api/problem-types')
-def get_problem_types():
-    return jsonify(problem_types)

@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Customers</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.rtlcss.com/bootstrap/v4.5.3/css/bootstrap.min.css" integrity="sha384-JvExCACAZcHNJEc7156QaHXTnQL3hQBixvj5RV5buE7vgnNEzzskDtx9NQ4p6BJe" crossorigin="anonymous">
     <style>
         body {
             background-image: url('/static/splash.jpg');
@@ -42,7 +42,7 @@
             <ul class="navbar-nav mr-auto">
 
                 <li class="nav-item active" id="first">
-                    <a class="nav-link text-light" href="#">מסך הבית <span class="sr-only">(current)</span></a>
+                    <a class="nav-link text-light" href="/">מסך הבית <span class="sr-only">(current)</span></a>
                 </li>
 
                 <li class="nav-item dropdown">
@@ -57,6 +57,7 @@
                     </li> 
             </ul>
         </div>
+        <a class="navbar-brand text-light" href="/">Ecommunity CRM</a>
     </nav>
     <div class="container mt-5 page-content" >
 
@@ -135,7 +136,7 @@
                             </div>
                             <div class="row" dir="rtl">
                                 <div class="col-md-4 md-offset-4">
-                                    <button type="submit" id="submit-complaint" class="btn btn-success float-right">
+                                    <button type="submit" id="submit-complaint" class="btn btn-success">
                                         עדכן פנייה</button>
                                 </div>
                             </div>
@@ -148,7 +149,8 @@
 
     </div>
 </body>
-<script src="https://unpkg.com/jquery/dist/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdn.rtlcss.com/bootstrap/v4.5.3/js/bootstrap.bundle.min.js" integrity="sha384-40ix5a3dj6/qaC7tfz0Yr+p9fqWLzzAXiwxVLt9dw7UjQzGYw6rWRhFAnRapuQyK" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
     integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
     crossorigin="anonymous"></script>
@@ -176,7 +178,6 @@
         max-width: 300px;
     }
 </style>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script>
 
     var all_complaints;

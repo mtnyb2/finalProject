@@ -4,32 +4,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Customers</title>
+    <title>פתיחת פנייה</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-image: url('/static/splash.jpg');
+            background-size: cover;
+        }
+
+        .page-content {
+            background-color: white;
+            border-radius: 10px;
+            padding-top: 10px;
+            padding-bottom: 30px;
+        }
+        .navbar-center {
+        margin-left: auto;
+        margin-right: auto;
+
+        }
+
+        table {
+            border: 3px solid #84bc26;
+        }
+    </style>
 </head>
 
-<body>
-    <div class="container mt-5">
-        <div class="row">
-            <div class="col-md-4 offset-md-4">
-                <h2 dir=rtl>פתיחת פנייה ללקוח</h2>
-            </div>
-        </div>
+<body dir="rtl">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light bg-dark">
 
+        <a class="navbar-brand text-light" href="#">פתיחת פנייה</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+            <ul class="navbar-nav mr-auto">
+
+                <li class="nav-item active" id="first">
+                    <a class="nav-link text-light" href="#">מסך הבית <span class="sr-only">(current)</span></a>
+                </li>
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle text-light" href="#" role="button" data-toggle="dropdown"
+                        aria-expanded="false">
+                        פעולות
+                    </a>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="/customer-search">פתיחת פנייה</a>
+                        <a class="dropdown-item" href="/customer-service">עדכון פנייה</a>
+                    </div>
+                    </li> 
+            </ul>
+        </div>
+    </nav>
+    <div class="container mt-5 page-content" >    
         <div class="row">
             <div class="col-md-8 offset-md-2">
                 <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                        <button class="btn btn-outline-secondary" type="button" id='search-button'>חיפוש</button>
-                    </div>
+
                     <input type="text" class="form-control" placeholder="פרטי לקוח" aria-label="" id="search-bar"
-                        aria-describedby="basic-addon1" dir="rtl">
+                        aria-describedby="basic-addon1">
+                        <div class="input-group-prepend">
+                            <button class="btn btn-outline-secondary" type="button" id='search-button'>חיפוש</button>
+                        </div>
                 </div>
             </div>
         </div>
 
         <div id="wrapper">
-            <table class="table" dir="rtl">
+            <table class="table">
                 <thead class="thead-dark">
                     <tr>
                         <th scope="col">שם לקוח</th>

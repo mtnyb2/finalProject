@@ -3,7 +3,6 @@ import datetime
 from flask import Flask, redirect, url_for, render_template, request, jsonify, send_file, send_from_directory
 import sqlite3
 
-
 app = Flask(__name__)
 
 @contextlib.contextmanager
@@ -99,32 +98,32 @@ def get_customers():
     with _get_cursor() as cursor:
         if request.method == 'GET':
             args = request.args
-            if not args:
-                all_customers_result = cursor.execute("SELECT * FROM 'Customers'")
+            # if not args:
+            #     all_customers_result = cursor.execute("SELECT * FROM 'Customers'")
+            #     customers = [dict(id=row[0], name=row[1], phone_number=row[2], email=row[3], address=row[4], age=row[5]) for row in all_customers_result.fetchall()]
+            #     return jsonify(customers)
+            # else:
+            if 'search' in args:
+                the_query = "SELECT * FROM 'Customers' customer where customer.name || customer.phone_number || customer.email || customer.address || customer.age like (?)"
+                all_customers_result = cursor.execute(the_query, (f"%{args['search']}%",))
+                customers = [dict(id=row[0], name=row[1], phone_number=row[2], email=row[3], address=row[4], age=row[5]) for row in all_customers_result.fetchall()]
+                for customer in customers:
+                    customer['sales'] = _get_all_sales_for_customer(cursor, customer['id'])
+                return customers
+            else:
+                query_parts = []
+                values = []
+                for key in args.keys():
+                    if key in ['name', 'phone_number', 'email', 'address', 'age']:
+                        query_parts.append(f"{key} = ?")
+                        values.append(args[key])
+                query_string = " AND ".join(query_parts)
+                sql_query = "SELECT * FROM Customers"
+                if query_parts:
+                    sql_query += f" WHERE {query_string}"
+                all_customers_result = cursor.execute(sql_query, values)
                 customers = [dict(id=row[0], name=row[1], phone_number=row[2], email=row[3], address=row[4], age=row[5]) for row in all_customers_result.fetchall()]
                 return jsonify(customers)
-            else:
-                if 'search' in args:
-                    the_query = "SELECT * FROM 'Customers' customer where customer.name || customer.phone_number || customer.email || customer.address || customer.age like (?)"
-                    all_customers_result = cursor.execute(the_query, (f"%{args['search']}%",))
-                    customers = [dict(id=row[0], name=row[1], phone_number=row[2], email=row[3], address=row[4], age=row[5]) for row in all_customers_result.fetchall()]
-                    for customer in customers:
-                        customer['sales'] = _get_all_sales_for_customer(cursor, customer['id'])
-                    return customers
-                else:
-                    query_parts = []
-                    values = []
-                    for key in args.keys():
-                        if key in ['name', 'phone_number', 'email', 'address', 'age']:
-                            query_parts.append(f"{key} = ?")
-                            values.append(args[key])
-                    query_string = " AND ".join(query_parts)
-                    sql_query = "SELECT * FROM Customers"
-                    if query_parts:
-                        sql_query += f" WHERE {query_string}"
-                    all_customers_result = cursor.execute(sql_query, values)
-                    customers = [dict(id=row[0], name=row[1], phone_number=row[2], email=row[3], address=row[4], age=row[5]) for row in all_customers_result.fetchall()]
-                    return jsonify(customers)
         elif request.method == 'POST':
             data = request.json
             try:
@@ -158,7 +157,8 @@ def get_customers_tickets():
                         complaint.created_date,
                           complaint.last_updated,
                           complaint.status,
-                          customer.phone_number
+                          customer.phone_number,
+                          complaint.worker_name                
                              FROM 'CustomerService' complaint join 'Customers' customer on customer.id = complaint.customer_id"""
             arguments = [statement]
             if 'search' in request.args:
@@ -167,7 +167,7 @@ def get_customers_tickets():
             all_customers_tickets_result = cursor.execute(*arguments)
             customers_tickets = []
             for customer_name, customer_address, sale_id, ticket_id, customer_id, details, \
-                  complaint_type, created_date, last_updated, status, phone_number in all_customers_tickets_result.fetchall():
+                  complaint_type, created_date, last_updated, status, phone_number, worker_name in all_customers_tickets_result.fetchall():
                 customers_tickets.append({
                     "ticket_id": ticket_id,
                     "sale_id": sale_id,
@@ -179,7 +179,8 @@ def get_customers_tickets():
                     "complaint_type": complaint_type,
                     "last_updated": last_updated,
                     "created_date": created_date,
-                    "status": status
+                    "status": status,
+                    "worker_name": worker_name
                 })
             return customers_tickets
         else:
@@ -202,15 +203,14 @@ def get_customer_tickets(ticket_id: str):
     with _get_cursor() as cursor:
         if request.method == 'GET':
             ticket_result = cursor.execute('SELECT * FROM CustomerService WHERE ticket_id=?', (ticket_id,)).fetchone()
-            ticket_id, sale_id, details, resolved_by, worker_id, timestamp, status = ticket_result
+            ticket_id, sale_id, details, resolved_by, worker_name, timestamp, status = ticket_result
             customer_details = ({
                 "ticket_id": ticket_id,
                 "sale_id": sale_id,
                 "details": details,
                 "resolved_by": resolved_by,
-                "worker_id": worker_id,
+                "worker_name": worker_name,
                 "timestamp": timestamp,
-
                 "status": status
             })
             return customer_details
@@ -219,14 +219,16 @@ def get_customer_tickets(ticket_id: str):
             timestamp = datetime.datetime.now()
             compaint_type = request.form.get('complaint_type')
             status = request.form.get('status')
+            worker_name = request.form.get('worker_name')
             
             try:
                 cursor.execute("""UPDATE CustomerService SET
                                details = ?,
                                last_updated = ?,
                                status = ?,
+                               worker_name = ?,
                                type = ? where id = ?""",
-                               (details, timestamp, status, compaint_type, ticket_id))
+                               (details, timestamp, status, worker_name, compaint_type, ticket_id))
                 return "Ticket is updated"
             except Exception as e:
                 print(f"Failed to update ticked with id = {ticket_id}. Error {e}")
@@ -236,7 +238,6 @@ def get_customer_tickets(ticket_id: str):
             statment = """DELETE FROM 'CustomerService' where id = ?"""
             cursor.execute(statment, (ticket_id,))
             return "OK", 200
-        
 
 
 @app.route('/new-ticket')
@@ -289,5 +290,3 @@ if __name__ == '__main__':
     # connet to SQLite DB 
     # make endpoit with POST method to register a new worker, use the SQLite3 cursor to put the row in the DB.
     app.run(debug=True, port=5002)
-
-

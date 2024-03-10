@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Navigation Buttons</title>
+    <link href="https://cdn.jsdelivr.net/npm/boxicons/css/boxicons.min.css" rel="stylesheet"> <!-- Boxicons CSS -->
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-image: url('64994452421978.jpg');
+            /* Background image */
+            background-size: cover;
+            /* Cover the entire page */
+            background-position: center;
+            /* Center the background image */
+            color: #ffffff;
+            /* White text color for better visibility */
+            padding: 20px;
+            /* Add padding to prevent content clipping */
+        }
+
+        .content {
+            text-align: center;
+            background-color: rgba(0, 0, 0, 0.5);
+            /* Semi-transparent background */
+            border-radius: 15px;
+            /* Rounded corners for the content container */
+            padding: 20px;
+            /* Padding inside the content container */
+        }
+
+        .title {
+            font-size: 50px;
+            /* Big title size */
+            margin-bottom: 40px;
+            /* Space between title and buttons */
+        }
+
+        .button-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            /* 3 columns */
+            grid-gap: 30px;
+            /* Increase space between buttons */
+        }
+
+        .nav-button {
+            background-color: #fff;
+            /* White background */
+            color: #000;
+            /* Black text color */
+            border: 1px solid #ddd;
+            /* Light grey border */
+            padding: 30px 60px;
+            /* Even larger padding for much bigger buttons */
+            font-size: 24px;
+            /* Increased font size */
+            text-decoration: none;
+            /* Remove underline from links */
+            display: inline-block;
+            /* Change to inline-block for proper alignment */
+            text-align: center;
+            /* Center the text inside the buttons */
+            border-radius: 30px;
+            /* More rounded corners for the buttons */
+            transition: 0.3s;
+            /* Smooth transition for hover effect */
+            vertical-align: middle;
+            /* Align the icon and text vertically */
+        }
+
+        .nav-button:hover {
+            background-color: #eee;
+            /* Slightly darker background on hover */
+            color: #333;
+            /* Slightly darker text color on hover */
+        }
+
+        .nav-button i {
+            display: block;
+            /* Make the icon display on a new line */
+            font-size: 32px;
+            /* Larger icon size */
+            margin-top: 10px;
+            /* Space between the text and the icon */
+        }
+    </style>
+</head>
+
+<body>
+    <div class="content">
+        <div class="title">tttiiitttllleee</div>
+        <div class="button-container">
+            <a href="#" class="nav-button">Page 1<i class='bx bxs-dog'></i></a>
+            <a href="#" class="nav-button">Page 2<i class='bx bxs-dog'></i></a>
+            <a href="#" class="nav-button">Page 3<i class='bx bxs-dog'></i></a>
+            <a href="#" class="nav-button">Page 4<i class='bx bxs-dog'></i></a>
+            <a href="#" class="nav-button">Page 5<i class='bx bxs-dog'></i></a>
+            <a href="#" class="nav-button">Page 6<i class='bx bxs-dog'></i></a>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -48,7 +48,8 @@ def create_customer_service_table(cursor):
                     type TEXT,
                     status CHARACTER(64),
                     last_updated TEXT,
-                    created_date TEXT
+                    created_date TEXT,
+                    worker_name TEXT
                     );"""
         cursor.execute(statement)
         print("Table CustomerService created")
@@ -91,7 +92,13 @@ def create_Marketingitems(cursor):
 def insert_customers(cursor):
     statement = """INSERT INTO 'Customers' (name, phone_number,  email, address, age) VALUES (?, ?, ?, ?, ?)"""
     customers = [("Major Corp", "+15463555", "pruchashing@Major.com", "1st street, CO", 19),
-                 ("Minor Corp", "+154635551", "pruchashing@Minor.com", "2st street, CO", 19)]
+                 ("Minor Corp", "+154635551", "pruchashing@Minor.com", "2st street, CO", 19),
+                 ("אביב דהן", "+0506648995", "Aviv@gmail.com", "ורד 19 חיפה", 19),
+                 ("מאיה גונן", "+0522005888", "Maya@gmail.com", "ויצמן 53, נס ציונה", 19),
+                 ("רויטל שקד", "+0502848540", "revi@gmail.com", "בן גוריון 112, ירושלים", 19),
+                 ("מאור אסרף", "+0527702869", "maor@gmail.com", "נחמני 52, תל אביב-יפו", 19),
+                 ("מיכאל דוידי", "+0546640554", "miki@gmail.com", "דוד ילין 4, חיפה", 19),
+                 ("לירן לוי", "+0545540838", "liranlevi@gmail.com", "עופרה חזה 30, קרית מוצקין", 19)]
     for customer in customers:
         cursor.execute(statement, customer)
 
@@ -141,8 +148,6 @@ def insert_customer_sales(cursor):
         insert_statement = """INSERT INTO SaleToItem (sale_id, item_id) values (?, ?)"""
         for item_id in item_ids:
             cursor.execute(insert_statement, (sale_id, item_id))
-        
-        
 
 def insert_onlineSelling_data(cursor):
     statement = """INSERT INTO OnlineSelling (id, item_id, customer_id, sending_id, sale_price, sale_timestamp)
@@ -243,6 +248,7 @@ def insert_onlineSelling_data(cursor):
 def main():
     conn = sqlite3.connect('Manual Database.db') 
     cursor = conn.cursor()
+    delete_table("CustomService",cursor)
     delete_table("MarketingItems", cursor)
     delete_table("OnlineSelling", cursor)
     delete_table("Customers", cursor)

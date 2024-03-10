@@ -1,3 +1,4 @@
+<!-- customer_search -->
 <!DOCTYPE html>
 <html lang="he">
 
@@ -6,9 +7,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>פתיחת פנייה</title>
     <!-- CSS -->
-<link rel="stylesheet" href="https://cdn.rtlcss.com/bootstrap/v4.5.3/css/bootstrap.min.css" integrity="sha384-JvExCACAZcHNJEc7156QaHXTnQL3hQBixvj5RV5buE7vgnNEzzskDtx9NQ4p6BJe" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.rtlcss.com/bootstrap/v4.5.3/css/bootstrap.min.css"
+        integrity="sha384-JvExCACAZcHNJEc7156QaHXTnQL3hQBixvj5RV5buE7vgnNEzzskDtx9NQ4p6BJe" crossorigin="anonymous">
 
-<!-- jQuery and JS bundle w/ Popper.js -->
+    <!-- jQuery and JS bundle w/ Popper.js -->
 
     <style>
         body {
@@ -23,12 +25,12 @@
             padding-bottom: 30px;
             border: 3px solid #84bc26;
         }
+
         .navbar-center {
-        margin-left: auto;
-        margin-right: auto;
+            margin-left: auto;
+            margin-right: auto;
 
         }
-
     </style>
 </head>
 
@@ -40,12 +42,9 @@
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-
-
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
 
             <ul class="navbar-nav mr-auto">
-
                 <li class="nav-item active" id="first">
                     <a class="nav-link text-light" href="/">מסך הבית <span class="sr-only">(current)</span></a>
                 </li>
@@ -59,21 +58,21 @@
                         <a class="dropdown-item" href="/customer-search">פתיחת פנייה</a>
                         <a class="dropdown-item" href="/customer-service">עדכון פנייה</a>
                     </div>
-                    </li> 
+                </li>
             </ul>
         </div>
         <a class="navbar-brand text-light" href="/">Ecommunity CRM</a>
     </nav>
-    <div class="container mt-5 page-content" >    
+    <div class="container mt-5 page-content">
         <div class="row">
             <div class="col-md-8 offset-md-2">
                 <div class="input-group mb-3">
 
                     <input type="text" class="form-control" placeholder="פרטי לקוח" aria-label="" id="search-bar"
                         aria-describedby="basic-addon1">
-                        <div class="input-group-prepend">
-                            <button class="btn btn-outline-secondary" type="button" id='search-button'>חיפוש</button>
-                        </div>
+                    <div class="input-group-prepend">
+                        <button class="btn btn-outline-secondary" type="button" id='search-button'>חיפוש</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -82,6 +81,7 @@
             <table class="table">
                 <thead class="thead-dark">
                     <tr>
+                        <th scope="col">מספר לקוח</th>
                         <th scope="col">שם לקוח</th>
                         <th scope="col"> כתובת </th>
                         <th scope="col"> מספר טלפון</th>
@@ -149,7 +149,7 @@
                                         <option value="faulty">תקול</option>
                                         <option value="other">אחר</option>
                                     </select>
-                                    
+
                                 </div>
                             </div>
                             <div class="row">
@@ -192,7 +192,10 @@
         }
     </style>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-<script src="https://cdn.rtlcss.com/bootstrap/v4.5.3/js/bootstrap.bundle.min.js" integrity="sha384-40ix5a3dj6/qaC7tfz0Yr+p9fqWLzzAXiwxVLt9dw7UjQzGYw6rWRhFAnRapuQyK" crossorigin="anonymous"></script>
+    <script src="https://cdn.rtlcss.com/bootstrap/v4.5.3/js/bootstrap.bundle.min.js"
+        integrity="sha384-40ix5a3dj6/qaC7tfz0Yr+p9fqWLzzAXiwxVLt9dw7UjQzGYw6rWRhFAnRapuQyK"
+        crossorigin="anonymous"></script>
+
     <script>
         var customers_data;
         $(document).ready(function () {
@@ -212,10 +215,10 @@
                         for (i = 0; i < customers_data.length; i++) {
                             let customer = customers_data[i];
                             let customer_list_item = $(`<tr customer_id=${customer.id} class="ticket">
-                                                    <td > ${customer.name}</th>
+                                                    <td > ${customer.id}</td>
+                                                    <td > ${customer.name}</td>
                                                     <td > ${customer.address} </td>
                                                     <td> ${customer.phone_number} </td>
-                                                    
                                                 </tr`);
                             customer_list_item.click(function (event) {
                                 $('#order-list').empty();
@@ -274,7 +277,7 @@
                                         $('#customer-order-number').val(sale_id);
 
                                         $('#complaintForm').submit(function (event) {
-                                            
+
                                             console.log($('#complaint_type').val())
                                             if ($('#complaint_type').val() == 'not-selected') {
                                                 alert("אנא בחר סוג פנייה");

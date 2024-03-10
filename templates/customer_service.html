@@ -1,3 +1,4 @@
+<!-- customer_service -->
 <!DOCTYPE html>
 <html lang="he">
 
@@ -5,7 +6,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Customers</title>
-    <link rel="stylesheet" href="https://cdn.rtlcss.com/bootstrap/v4.5.3/css/bootstrap.min.css" integrity="sha384-JvExCACAZcHNJEc7156QaHXTnQL3hQBixvj5RV5buE7vgnNEzzskDtx9NQ4p6BJe" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.rtlcss.com/bootstrap/v4.5.3/css/bootstrap.min.css"
+        integrity="sha384-JvExCACAZcHNJEc7156QaHXTnQL3hQBixvj5RV5buE7vgnNEzzskDtx9NQ4p6BJe" crossorigin="anonymous">
     <style>
         body {
             background-image: url('/static/splash.jpg');
@@ -19,9 +21,10 @@
             padding-bottom: 30px;
             border: 3px solid #84bc26;
         }
+
         .navbar-center {
-        margin-left: auto;
-        margin-right: auto;
+            margin-left: auto;
+            margin-right: auto;
 
         }
     </style>
@@ -54,27 +57,28 @@
                         <a class="dropdown-item" href="/customer-search">פתיחת פנייה</a>
                         <a class="dropdown-item" href="/customer-service">עדכון פנייה</a>
                     </div>
-                    </li> 
+                </li>
             </ul>
         </div>
         <a class="navbar-brand text-light" href="/">Ecommunity CRM</a>
     </nav>
-    <div class="container mt-5 page-content" >
+    <div class="container mt-5 page-content">
 
         <div id="wrapper">
             <table class="table" dir="rtl">
                 <thead class="thead-dark">
                     <tr>
+                        <th scope="col">מספר פניה </th>
                         <th scope="col">שם לקוח</th>
                         <th scope="col">תאריך פתחיחת פנייה </th>
                         <th scope="col"> פרטים</th>
                         <th scope="col">סטטוס </th>
+                        <th scope="col">עובד מטפל </th>
                         <th scope="col">סוג פנייה</th>
                         <th scope="col">סגור פנייה</th>
                     </tr>
                 </thead>
                 <tbody>
-
                 </tbody>
             </table>
         </div>
@@ -146,11 +150,12 @@
                 </div>
             </div>
         </div>
-
     </div>
 </body>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-<script src="https://cdn.rtlcss.com/bootstrap/v4.5.3/js/bootstrap.bundle.min.js" integrity="sha384-40ix5a3dj6/qaC7tfz0Yr+p9fqWLzzAXiwxVLt9dw7UjQzGYw6rWRhFAnRapuQyK" crossorigin="anonymous"></script>
+<script src="https://cdn.rtlcss.com/bootstrap/v4.5.3/js/bootstrap.bundle.min.js"
+    integrity="sha384-40ix5a3dj6/qaC7tfz0Yr+p9fqWLzzAXiwxVLt9dw7UjQzGYw6rWRhFAnRapuQyK"
+    crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
     integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
     crossorigin="anonymous"></script>
@@ -211,6 +216,7 @@
     }
 
     function fill_form_with_complaint_details(complaint, show_modal) {
+        $('#customer-id').val(console.log(generateRandomNumber()));
         $('#customer-name').val(complaint.customer_name);
         $('#customer-address').val(complaint.customer_address);
         $('#customer-order-number').val(complaint.sale_id);
@@ -225,12 +231,14 @@
         $('#submit-complaint').attr('status', complaint.status);
         $('form.hidden').val(complaint.status);
         $('#status').val(complaint.status);
+        $('#worker_name').val(complaint.worker_name);
         $('#complaintForm').attr('complaint_id', complaint.ticket_id);
         $('#complaintForm').attr('status', complaint.status);
     }
 
     function open_modal(event) {
-        if (event.target.id == 'dropdownMenuButton' || event.target.id == 'choice') {
+        if (event.target.id == 'dropdownMenuButton' || event.target.id == 'choice' ||
+            event.target.id == 'dropdownWorker') {
             return;
         }
         event.preventDefault();
@@ -270,7 +278,20 @@
         $('#status').val(this.innerText);
         update_complaint(event, complaint);
         fill_table();
+    }
 
+    function update_worker(event) {
+        event.stopPropagation();
+        var e = event.target;
+        var ticket_id = e.value;
+        var worker_name = e.options[e.selectedIndex].text;
+        alert(ticket_id);
+        alert(worker_name);
+        let complaint = find_complaint(ticket_id);
+        fill_form_with_complaint_details(complaint, false);
+        $('#worker_name').val(worker_name);
+        update_complaint(event, complaint);
+        fill_table();
     }
 
     function generate_complaint_list(data) {
@@ -290,7 +311,6 @@
             if (complaint_type_text == null) {
                 complaint_type_text = 'לא ידוע'
             }
-
             let dropdown_class = 'success';
             if (complaint.status == 'בטיפול') {
                 dropdown_class = 'warning';
@@ -298,26 +318,47 @@
             if (complaint.status == 'תקוע') {
                 dropdown_class = 'danger';
             }
+            if (complaint.worker_name == null) {
+                complaint_worker = 'לא שובץ';
+            }
+
+
+
+
+
+
+
+
+            //בשורה 342 ניתן לשנות את המספר בעזרת פעולה מתמטית
+
             let complaint_row = $(`<tr complaint_id=${complaint.ticket_id} class="ticket">
+                    <td scope="row"> ${complaint.ticket_id}</td> 
                     <th scope="row"> ${complaint.customer_name}</th>
                     <td> ${new Date(complaint.created_date).toLocaleDateString('en-UK')} </td>
                     <td> <p class="customer-details" >${complaint.details} </p> </td>
-                    <td> 
+                    <td>
                         <div class="dropdown">
                         <button id="dropdownMenuButton" complaint-id=${complaint.ticket_id} type="button" class="btn btn-${dropdown_class} dropdown-toggle"
                          data-toggle="dropdown" aria-haspopup="true" aria-haspopup="true" aria-expanded="false">
                             ${complaint.status}
                         </button>
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            <a id='choice' class="dropdown-item" complaint_id=${complaint.ticket_id}>חדש</a>
-                            <a id='choice' class="dropdown-item" complaint_id=${complaint.ticket_id}>בטיפול</a>
-                            <a id='choice' class="dropdown-item" complaint_id=${complaint.ticket_id}>תקוע</a>
+                            <a id='statusChoice' class="dropdown-item" complaint_id=${complaint.ticket_id}>חדש</a>
+                            <a id='statusChoice' class="dropdown-item" complaint_id=${complaint.ticket_id}>בטיפול</a>
+                            <a id='statusChoice' class="dropdown-item" complaint_id=${complaint.ticket_id}>תקוע</a>
                         </div>
                         </div>
                     </td>
+                    <td>
+                        <select name="workers" id="dropdownWorker" onchange="update_worker(event)" >
+                            <option value=${complaint.ticket_id}>${complaint_worker}</option>
+                            <option value=${complaint.ticket_id}>אדווה</option>
+                            <option value=${complaint.ticket_id}>אמיר</option>
+                            <option value=${complaint.ticket_id}>יהלי</option>
+                        </select>
+                    </td>
                     <td> ${complaint_type_text} </td >
             <td> <button type="button" complaint_id=${complaint.ticket_id} class="btn btn-danger delete-complaint">סגור פנייה </button> </td>
-                    
                 </tr`);
             tickets.push(complaint_row);
         }
@@ -329,8 +370,17 @@
         $('tr.ticket').click(open_modal);
         $('button.delete-complaint').click(close_complaint);
         $('a.dropdown-item').click(update_status);
+    }
 
-    } $(document).ready(function () {
+    $(document).ready(function () {
         fill_table();
     });
+
+    // 
+    function generateRandomNumber() {
+        const min = 2222222;
+        const max = 9999999;
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
 </script>

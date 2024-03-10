@@ -1,3 +1,4 @@
+<!-- login -->
 <!DOCTYPE html>
 <html lang="he">
 
@@ -9,22 +10,22 @@
     <link rel="stylesheet" type="text/css" href="static/mm1.css">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
-    integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
-    crossorigin="anonymous"></script>
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
     <script>
-        $('document').ready(function() {
-            
-            $('#log-in').click(function(event) {
-                
+        $('document').ready(function () {
+
+            $('#log-in').click(function (event) {
+
                 let username = $('#username').val();
                 let password = $('#password').val();
-                
-                if (username == 'paz' && password == 'paz123') { 
+
+                if (username == 'paz' && password == 'paz123') {
                     $.cookie("user", "OK", { path: '/' });
                     window.location = "/";
                 }
-                else{
+                else {
                     alert("שם משתמש וסיסמא שגוים");
                 }
             })
@@ -37,29 +38,28 @@
 <body>
 
     <div class="wrapper">
-            <h1>Login</h1>
+        <h1>Login</h1>
 
-            <div class="input-box">
-                <input type="text" placeholder="מזהה משתמש" id="username" required>
-                <i class='bx bxs-user' style='color:#909088'></i>
-            </div>
+        <div class="input-box">
+            <input type="text" placeholder="מזהה משתמש" id="username" required>
+            <i class='bx bxs-user' style='color:#909088'></i>
+        </div>
 
-            <div class="input-box">
-                <input type="password" placeholder="סיסמה" id="password"  required>
-                <i class='bx bxs-lock-alt' style='color:#909088'></i>
-            </div>
+        <div class="input-box">
+            <input type="password" placeholder="סיסמה" id="password" required>
+            <i class='bx bxs-lock-alt' style='color:#909088'></i>
+        </div>
 
-            <div class="remember-forgot">
-                <label><input type="checkbox"> זכור אותי </label>
-                <a href="#"> forgot password </a>
-            </div>
+        <div class="remember-forgot">
+            <label><input type="checkbox"> זכור אותי </label>
+            <a href="#"> forgot password </a>
+        </div>
 
-            <button type="submit" class="btn" id="log-in">התחברות</button>
+        <button type="submit" class="btn" id="log-in">התחברות</button>
 
-            <!-- <div class="register-link">
+        <!-- <div class="register-link">
                 <p>Don't have an account?<a href="#"> Register</a></p>
             </div> -->
     </div>
 </body>
-
 </htmml>
